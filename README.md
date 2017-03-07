@@ -1,37 +1,59 @@
-## Welcome to GitHub Pages
+# drf-scaffolding
+Django app which allow create full APIs based on your models defined in your project
 
-You can use the [editor on GitHub](https://github.com/angellagunas/testpackageal/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+### How to use.
+1.-  Install drfscaffolding following:
+```bash
+pip install pip install drfscaffolding
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+2.- Add rest_framework, rest_framework_swagger and drf_scaffolding on your install apps
+```python
+...
 
-### Jekyll Themes
+INSTALLED_APPS = [
+    'rest_framework',
+    'rest_framework_swagger',
+    'drf_scaffolding',
+]
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/angellagunas/testpackageal/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+...
+```
 
-### Support or Contact
+3.- Define configurations on your models. For example.
+```python
+class Poll(models.Model):
+    class Meta:
+        drf_config = {
+            'api': {
+                'scaffolding': True,
+                'methods': ['CREATE', 'UPDATE'],
+                'serializer': {
+                    'scaffolding': True,
+                    'fields': [
+                        'title'
+                    ]
+                }
+            }
+        }
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+    title = models.CharField(max_length=100)
+    body = models.CharField(max_length=100)
+```
+
+4.- Execute django command to create apis
+```bash
+python manage.py createapi
+```
+
+5.- Add apis urls generated on your urls project.
+```python
+urlpatterns = [
+    ...
+    url(r'^api/', include('api.urls', namespace="api")),
+    ...
+]
+
+```
+
+6.- Now, you can check your urls in your web browser.
